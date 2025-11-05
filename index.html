@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PDA - Ejercicio 3 (aⁿ bᵐ x y* cᵐ aⁿ)</title>
+  <link rel="stylesheet" href="estilo.css" />
+</head>
+<body>
+  <header>
+    <h1>Simulador PDA — Ejercicio #3</h1>
+    <p class="subtitle">Lenguaje: <code>L = { aⁿ bᵐ x y* cᵐ aⁿ | n ≥ 2, m ≥ 1 }</code></p>
+  </header>
+
+  <main class="container">
+    <section class="left">
+      <article class="card">
+        <h2>Séptupla (formal)</h2>
+        <pre>
+P = (Q, Σ, Γ, δ, q₀, Z₀, F)
+
+Q = { q0, q1, q2, q3, q4, qf }
+Σ = { a, b, x, y, c }
+Γ = { A, B, Z0 }   (A guarda conteo de 'a' inicial, B guarda conteo de 'b')
+q₀ = q0
+Z₀ = Z0
+F = { qf }
+        </pre>
+      </article>
+
+      <article class="card">
+        <h2>Descripción breve de funcionamiento</h2>
+        <p>
+          El PDA apila una marca <code>A</code> por cada <code>a</code> inicial (n veces). Luego apila una marca <code>B</code> por cada <code>b</code> (m veces).
+          Lee un <code>x</code>, ignora cualquier cantidad de <code>y</code> (y*), luego lee exactamente m símbolos <code>c</code> desapilando una <code>B</code> por cada <code>c</code>.
+          Finalmente lee n símbolos <code>a</code> desapilando una <code>A</code> por cada <code>a</code>. Acepta si la entrada se acaba y la pila volvió a <code>Z0</code>, además cumple n≥2 y m≥1.
+        </p>
+      </article>
+
+      <article class="card">
+        <h2>Tabla de transiciones (δ) — resumen</h2>
+        <table class="trans">
+          <thead><tr><th>Estado</th><th>Entrada</th><th>Tope pila</th><th>Acción</th><th>Nuevo estado</th></tr></thead>
+          <tbody>
+            <tr><td>q0</td><td>a</td><td>any</td><td>push A</td><td>q0</td></tr>
+            <tr><td>q0</td><td>b</td><td>any</td><td>— (no push a) cambio a q1</td><td>q1</td></tr>
+
+            <tr><td>q1</td><td>b</td><td>any</td><td>push B</td><td>q1</td></tr>
+            <tr><td>q1</td><td>x</td><td>any</td><td>leer x (m≥1 requerido)</td><td>q2</td></tr>
+
+            <tr><td>q2</td><td>y</td><td>any</td><td>ignorar y</td><td>q2</td></tr>
+            <tr><td>q2</td><td>c</td><td>B</td><td>pop B</td><td>q3</td></tr>
+
+            <tr><td>q3</td><td>c</td><td>B</td><td>pop B</td><td>q3</td></tr>
+            <tr><td>q3</td><td>a</td><td>A</td><td>pop A</td><td>q4</td></tr>
+
+            <tr><td>q4</td><td>a</td><td>A</td><td>pop A</td><td>q4</td></tr>
+            <tr><td>q4</td><td>ε</td><td>Z0</td><td>aceptar</td><td>qf</td></tr>
+          </tbody>
+        </table>
+      </article>
+
+      <article class="card">
+        <h2>Gramática libre de contexto (una posible G)</h2>
+        <pre>
+S → A S A' | A A'    (esta forma conceptual; abajo una versión más directa)
+S → a S a | T
+T → B x U
+B → b B | b
+U → y U | V
+V → c V' 
+V'→ c V' | ε   (la idea: V genera c^m con m≥1)
+        </pre>
+        <p>Nota: la gramática es solo una forma de representar el mismo lenguaje; en la entrega incluye una derivación con una cadena de ejemplo.</p>
+      </article>
+
+      <article class="card">
+        <h2>Expresión regular (aprox.)</h2>
+        <p><code>a{2,} b+ x y* c+ a{2,}</code> — (nota: las ER no capturan bien dependencias de conteo como aⁿ ... aⁿ; esto es una aproximación sintáctica)</p>
+      </article>
+    </section>
+
+    <section class="right">
+      <article class="card">
+        <h2>Simulador</h2>
+        <div class="form-row">
+          <label for="inputString">Cadena w:</label>
+          <input id="inputString" placeholder="ej: aabbxcccaa" />
+        </div>
+
+        <div class="form-row">
+          <button id="runBtn">Analizar</button>
+          <button id="stepBtn">Paso a paso</button>
+          <button id="resetBtn">Reset</button>
+        </div>
+
+        <div class="info">
+          <p><strong>Estado actual:</strong> <span id="stateDisplay">-</span></p>
+          <p><strong>Resultado:</strong> <span id="resultDisplay">-</span></p>
+        </div>
+
+        <div class="visual">
+          <h3>Pila (top a la derecha)</h3>
+          <div id="stackView" class="stack"></div>
+
+          <h3>Traza (Descripciones Instantáneas)</h3>
+          <ol id="traceView" class="trace"></ol>
+        </div>
+
+        <div class="samples">
+          <h4>Cadenas de prueba</h4>
+          <button class="sample" data-val="aabxca">Cadena mínima: aabxca</button>
+          <button class="sample" data-val="aabbxcccaa">Promedio: aabbxcccaa</button>
+          <button class="sample" data-val="aa bbb x yyyy ccc aaa".replace(/\s/g,'')>Ej: aabbbxyyycccaaa</button>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>Instrucciones rápidas</h2>
+        <ol>
+          <li>Escribe la cadena en el campo y presiona <strong>Analizar</strong>.</li>
+          <li>Usa <strong>Paso a paso</strong> para ver cada transición manualmente.</li>
+          <li>La traza muestra <code>(estado, restante, pila)</code> en cada paso.</li>
+          <li>El simulador exige <code>n≥2</code> y <code>m≥1</code>.</li>
+        </ol>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <p>Hecho para la entrega: <strong>Autómatas con Pila — Ejercicio #3</strong></p>
+  </footer>
+
+  <script src="scrip.js"></script>
+</body>
+</html>
