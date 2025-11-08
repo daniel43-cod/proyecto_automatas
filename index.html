@@ -23,12 +23,36 @@ P = (Q, Σ, Γ, δ, q₀, Z₀, F)
 
 Q = { q0, q1, q2, q3, q4, qf }
 Σ = { a, b, x, y, c }
-Γ = { A, B, Z0 }   (A guarda conteo de 'a' inicial, B guarda conteo de 'b')
+Γ = { A, B, Z0 }   
 q₀ = q0
 Z₀ = Z
 F = { qf }
         </pre>
       </article>
+
+        
+      <article class="card">
+        <h2>Cadenas aceptadas</h2>
+        <ul>
+          <li><code>aabxcaa</code> </li>
+          <li><code>aabbxccaa</code> </li>
+          <li><code>aaabbxcccaaa</code> </li>
+          <li><code>aabxycaa</code> </li>
+          <li><code>aaabbxyyycccaaa</code> </li>
+        </ul>
+      </article>
+   
+      <section class="card rechazadas">
+  <h2>Cadenas Rechazadas</h2>
+  <ul>
+    <li>aabxcy</li>         
+    <li>abbxcyc</li>        
+    <li>aabbbxcccaa</li>    
+    <li>aabbxyccaaa</li>    
+    <li>abxcycaa</li>       
+  </ul>
+</section>
+
 
       <article class="card">
         <h2>Descripción breve de funcionamiento</h2>
@@ -38,6 +62,7 @@ F = { qf }
           Finalmente lee n símbolos <code>a</code> desapilando una <code>A</code> por cada <code>a</code>. Acepta si la entrada se acaba y la pila volvió a <code>Z0</code>, además cumple n≥2 y m≥1.
         </p>
       </article>
+      
 
       <article class="card">
         <h2>Tabla de transiciones (δ) — resumida</h2>
@@ -70,6 +95,7 @@ F = { qf }
         </table>
       </article>
 
+   
       <article class="card">
         <h2>Gramática libre de contexto (una posible G)</h2>
         <pre>
@@ -79,7 +105,6 @@ U → y U | V
 V → c V' 
 V'→ c V' | ε
         </pre>
-        <p> </p>
       </article>
 
       <article class="card">

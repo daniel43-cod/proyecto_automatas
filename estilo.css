@@ -1,182 +1,173 @@
 /* ======= ESTILOS GENERALES ======= */
 :root{
-  --bg-cabecera: rgb(133, 59, 59);         /* Fondo rojo del encabezado */
-  --texto-cabecera: white;     /* Texto azul en el encabezado */
-  --fondo-principal:blue; /* Corinto */
-  --card-bg: #000000;         /* Cuadros negros */
+  --bg-cabecera: rgb(133, 59, 59);
+  --texto-cabecera: white;
+  --fondo-principal: blue;
+  --card-bg: #000000;
   --card-border: #222;
-  --text-color: white;        /* Texto dentro de tarjetas */
+  --text-color: white;
   --accent: #0b76d1;
   --muted: #bbb;
 }
 
 /* Reset general */
 *{
-  box-sizing:border-box;
+  box-sizing: border-box;
   font-family: "Segoe UI", Arial, sans-serif;
 }
 
 body{
-  margin:0;
-  background-color: var(--fondo-principal); /* fondo corinto */
+  margin: 0;
+  background-color: var(--fondo-principal);
   color: var(--text-color);
-  text-align:center;
+  text-align: center;
 }
 
 /* ======= ENCABEZADO ======= */
 header{
-  background-color: var(--bg-cabecera); /* fondo rojo */
-  color: var(--texto-cabecera);         /* texto azul */
+  background-color: var(--bg-cabecera);
+  color: var(--texto-cabecera);
   padding: 25px 15px;
 }
 header h1{
-  margin:6px 0;
+  margin: 6px 0;
   font-size: 24px;
 }
 .subtitle{
   color: var(--texto-cabecera);
-  margin-top:8px;
+  margin-top: 8px;
   font-size: 18px;
 }
 
 /* ======= CONTENEDOR PRINCIPAL ======= */
 .container{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  align-items:flex-start;
-  gap:20px;
-  max-width:1200px;
-  margin:20px auto;
-  padding:0 15px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 30px; /* 🔹 más separación entre cuadros */
+  max-width: 1200px;
+  margin: 25px auto;
+  padding: 0 15px;
 }
 
 /* ======= CARDS (CUADROS NEGROS) ======= */
 .card{
   background: var(--card-bg);
   color: var(--text-color);
-  border:1px solid var(--card-border);
-  border-radius:10px;
-  padding:18px;
-  box-shadow:0 0 10px rgba(0,0,0,0.3);
-  text-align:left;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.4);
+  text-align: left;
+  margin-bottom: 20px; /* 🔹 espacio adicional entre cards */
 }
 
 /* ======= SECCIONES ======= */
 .left, .right{
-  flex:1 1 45%;
-  min-width:400px;
+  flex: 1 1 45%;
+  min-width: 400px;
 }
 
-/* ======= NUEVO ORDEN SEGÚN PETICIÓN ======= */
-/*
-  Orden visual deseado:
-  1. Descripción arriba (ancho completo)
-  2. A la izquierda: campo para ingresar cadena (simulador)
-  3. A la derecha: séptupla
-  4. Tabla de transiciones hasta abajo
+/* ======= NUEVO ORDEN VISUAL ======= */
+/* 1. Cadenas aceptadas (arriba)
+   2. Simulador
+   3. Teoría (séptupla, descripción, tabla, gramática)
 */
 
-/* Descripción ocupa todo el ancho */
-.descripcion {
+.cadenas {
   flex: 1 1 100%;
   order: 1;
 }
 
-/* Simulador a la izquierda */
 .simulador {
+  flex: 1 1 100%;
   order: 2;
 }
 
-/* Séptupla a la derecha */
-.septupla {
+.teoria {
+  flex: 1 1 100%;
   order: 3;
 }
 
-/* Tabla hasta abajo */
-.tabla-transiciones {
-  flex: 1 1 100%;
-  order: 4;
-}
-
-/* ======= TABLAS Y VISUAL ======= */
+/* ======= TABLAS ======= */
 .trans{
-  width:100%;
-  border-collapse:collapse;
-  font-size:14px;
-  background:#111;
-  color:white;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  background: #111;
+  color: white;
 }
 .trans th, .trans td{
-  border:1px solid #333;
-  padding:6px;
-  text-align:left;
+  border: 1px solid #333;
+  padding: 8px;
+  text-align: left;
 }
 
 /* ======= FORMULARIOS ======= */
 .form-row{
-  display:flex;
-  gap:8px;
-  align-items:center;
-  margin:8px 0;
-  justify-content:center;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 8px 0;
+  justify-content: center;
 }
 input#inputString{
-  flex:1;
-  padding:8px;
-  border:1px solid #555;
-  border-radius:6px;
-  background:#222;
-  color:white;
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #555;
+  border-radius: 6px;
+  background: #222;
+  color: white;
 }
 button{
-  padding:8px 12px;
-  border-radius:6px;
-  border:none;
-  background:var(--accent);
-  color:white;
-  cursor:pointer;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  background: var(--accent);
+  color: white;
+  cursor: pointer;
 }
 button:hover{
-  opacity:0.9;
+  opacity: 0.9;
 }
 
 /* ======= VISUALIZACIÓN ======= */
 .visual{
-  margin-top:10px;
+  margin-top: 12px;
 }
 .stack{
-  display:flex;
-  gap:6px;
-  flex-wrap:wrap;
-  padding:8px;
-  border:1px dashed #666;
-  min-height:40px;
-  border-radius:6px;
-  background:#111;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 8px;
+  border: 1px dashed #666;
+  min-height: 40px;
+  border-radius: 6px;
+  background: #111;
 }
 .stack .cell{
-  padding:6px 10px;
-  border-radius:6px;
-  border:1px solid #555;
-  background:#222;
-  font-weight:600;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #555;
+  background: #222;
+  font-weight: 600;
 }
 
 .trace{
-  max-height:220px;
-  overflow:auto;
-  padding-left:18px;
-  margin-top:6px;
-  background:#111;
-  border-radius:6px;
-  text-align:left;
+  max-height: 220px;
+  overflow: auto;
+  padding-left: 18px;
+  margin-top: 6px;
+  background: #111;
+  border-radius: 6px;
+  text-align: left;
 }
 
 /* ======= FOOTER ======= */
 footer{
-  padding:15px;
-  text-align:center;
-  color:#ddd;
-  font-size:14px;
+  padding: 15px;
+  text-align: center;
+  color: #ddd;
+  font-size: 14px;
 }

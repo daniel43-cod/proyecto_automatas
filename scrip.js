@@ -1,8 +1,7 @@
-// pda.js
-// Simulador para L = { a^n b^m x y* c^m a^n | n >= 2, m >= 1 }
+
 
 (() => {
-  // DOM
+
   const input = document.getElementById('inputString');
   const runBtn = document.getElementById('runBtn');
   const stepBtn = document.getElementById('stepBtn');
@@ -13,22 +12,22 @@
   const traceView = document.getElementById('traceView');
   const samples = document.querySelectorAll('.sample');
 
-  // PDA internal state
+
   let tape = '';
   let pos = 0;
   let state = 'q0';
   let stack = [];
-  let trace = []; // array of {state, remaining, stackSnapshot}
+  let trace = [];
   let modeStep = false;
   let halted = false;
 
-  // Counters for verifying n>=2 and m>=1 etc
+
   let initialACount = 0;
   let bCount = 0;
   let cCount = 0;
   let finalACount = 0;
 
-  // helper
+ 
   function resetAll(){
     tape = '';
     pos = 0;
@@ -58,7 +57,7 @@
 
   function render(){
     stateDisplay.textContent = state;
-    // stack
+    
     stackView.innerHTML = '';
     stack.forEach(s => {
       const d = document.createElement('div');
@@ -66,7 +65,7 @@
       d.textContent = s;
       stackView.appendChild(d);
     });
-    // trace
+    
     traceView.innerHTML = '';
     trace.forEach((t,i) => {
       const li = document.createElement('li');
@@ -75,45 +74,43 @@
     });
   }
 
-  // Main full-run function
+
   function runOnce(inputStr){
     resetAll();
     tape = inputStr.trim();
-    // validate allowed symbols
+ 
     if(!/^[abycx]*$/.test(tape)){
       resultDisplay.textContent = 'Error: símbolos no válidos. Sólo: a b x y c';
       resultDisplay.style.color = 'crimson';
       return;
     }
-    // start
+   
     trace.push(snapshot());
-    // run loop
+    
     while(!halted){
       step();
     }
   }
 
   function step(){
-    // if halted, do nothing
-    if(halted) return;
-    // If modeStep, will stop after one internal transition
-    // If pos > length and in acceptance condition we may accept
-    // guard end
-    const sym = tape[pos] || ''; // '' == end of tape
 
-    // State machine transitions
+    if(halted) return;
+  
+    const sym = tape[pos] || ''; 
+
+    
     if(state === 'q0'){
       if(sym === 'a'){
-        // push A for each initial a
+
         push('A'); initialACount++;
         pos++;
         trace.push(snapshot());
       } else if(sym === 'b'){
-        // move to q1 if we have seen at least one 'a' (but n>=2 check later)
+        
         state = 'q1';
         trace.push(snapshot());
       } else {
-        // invalid symbol at this stage
+        
         reject(`En q0 se esperaba 'a' o 'b' (inicio). Encontrado: '${sym || 'EOF'}'`);
         return;
       }
@@ -124,7 +121,7 @@
         pos++;
         trace.push(snapshot());
       } else if(sym === 'x'){
-        // must have at least one b (m>=1)
+        
         if(bCount < 1){ reject('Rechazado: se requiere m ≥ 1 (al menos una b antes de x)'); return; }
         pos++;
         state = 'q2';
@@ -135,17 +132,17 @@
       }
     }
     else if(state === 'q2'){
-      // after x: skip y* or if see c start popping B
+    
       if(sym === 'y'){
         pos++;
         trace.push(snapshot());
       } else if(sym === 'c'){
-        // start popping B; require top B
+        
         if(top() !== 'B'){
           reject('Rechazado: al empezar a leer c no hay marcas B en la pila (conteo m no coincide).');
           return;
         }
-        // move to q3 but do not consume here? we'll consume in q3 handler to pop
+      
         state = 'q3';
         trace.push(snapshot());
       } else {
@@ -164,17 +161,17 @@
           return;
         }
       } else if(sym === 'a'){
-        // must have popped all Bs (cCount must equal bCount)
+        
         if(bCount !== cCount){
           reject(`Rechazado: número de c (${cCount}) no igual número de b (${bCount}).`);
           return;
         }
-        // also ensure at least one c (m>=1)
+       
         if(cCount < 1){
           reject('Rechazado: se requiere al menos un c (m ≥ 1).');
           return;
         }
-        // move to final a-reading state
+     
         state = 'q4';
         trace.push(snapshot());
       } else {
@@ -193,7 +190,7 @@
           return;
         }
       } else if(sym === ''){
-        // end of tape: accept only if stack==['Z0'] and initialACount==finalACount and initialACount>=2
+
         if(stack.length === 1 && stack[0] === 'Z0'){
           if(initialACount !== finalACount){
             reject(`Rechazado: número final de a (${finalACount}) != inicial de a (${initialACount}).`);
@@ -206,8 +203,8 @@
           accept();
           return;
         } else {
-          // maybe there are leftover As -> if so, we need to pop them but input is ended -> reject
-          reject('Rechazado: entrada terminada pero la pila no volvió a Z0.');
+        
+          reject('Rechazado:');
           return;
         }
       } else {
@@ -220,10 +217,9 @@
       return;
     }
 
-    // if modeStep true, pause after single internal transition
+
     if(modeStep) halted = true;
 
-    // If pos beyond length and not in q4 might be error; handle on next step
   }
 
   function accept(){
